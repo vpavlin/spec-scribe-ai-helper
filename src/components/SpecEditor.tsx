@@ -159,11 +159,11 @@ Format the output as a clear, professional specification document in Markdown fo
   const downloadSpec = () => {
     if (!specData.generatedSpec) return;
     
-    const blob = new Blob([specData.generatedSpec], { type: 'text/plain' });
+    const blob = new Blob([specData.generatedSpec], { type: 'text/markdown' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `${specData.title.replace(/[^a-zA-Z0-9]/g, '_')}_spec.txt`;
+    a.download = `${specData.title.replace(/[^a-zA-Z0-9]/g, '_')}.md`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
