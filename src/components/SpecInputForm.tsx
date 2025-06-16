@@ -1,12 +1,14 @@
 
 import React from 'react';
 import { Send } from 'lucide-react';
+import TemplateSelector from './TemplateSelector';
 
 interface SpecInputFormProps {
   specData: {
     title: string;
     description: string;
     examples: string;
+    selectedTemplates?: string[];
   };
   setSpecData: (data: any) => void;
   documents: Array<{
@@ -28,6 +30,10 @@ const SpecInputForm: React.FC<SpecInputFormProps> = ({
   isGenerating,
   error
 }) => {
+  const handleTemplateSelectionChange = (selectedTemplates: string[]) => {
+    setSpecData({ ...specData, selectedTemplates });
+  };
+
   return (
     <div className="flex flex-col h-full overflow-hidden">
       <div className="border-2 border-black p-4 flex flex-col h-full">
@@ -67,9 +73,14 @@ const SpecInputForm: React.FC<SpecInputFormProps> = ({
             />
           </div>
 
+          <TemplateSelector
+            selectedTemplates={specData.selectedTemplates || []}
+            onSelectionChange={handleTemplateSelectionChange}
+          />
+
           {documents.length > 0 && (
             <div className="border-2 border-gray-400 p-3">
-              <p className="text-sm font-bold">ATTACHED DOCUMENTS: {documents.length}</p>
+              <p className="text-sm font-bold">UPLOADED DOCUMENTS: {documents.length}</p>
               <p className="text-xs text-gray-600">
                 {documents.map(doc => doc.name).join(', ')}
               </p>

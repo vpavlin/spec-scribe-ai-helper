@@ -19,7 +19,8 @@ const Index = () => {
     title: '',
     description: '',
     examples: '',
-    generatedSpec: ''
+    generatedSpec: '',
+    selectedTemplates: []
   });
 
   // Check if config is set up

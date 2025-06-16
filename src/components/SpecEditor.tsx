@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import SpecInputForm from './SpecInputForm';
 import SpecOutputDisplay from './SpecOutputDisplay';
@@ -22,6 +22,7 @@ interface SpecEditorProps {
     description: string;
     examples: string;
     generatedSpec: string;
+    selectedTemplates?: string[];
   };
   setSpecData: (data: any) => void;
 }
@@ -31,6 +32,41 @@ const SpecEditor: React.FC<SpecEditorProps> = ({ config, documents, specData, se
   const [error, setError] = useState('');
   const [thinkingProcess, setThinkingProcess] = useState('');
   const [showThinking, setShowThinking] = useState(false);
+  const [templates, setTemplates] = useState<Array<{id: string, name: string, content: string}>>([]);
+
+  useEffect(() => {
+    loadTemplates();
+  }, []);
+
+  const loadTemplates = async () => {
+    try {
+      const response = await fetch('/templates/index.json');
+      if (response.ok) {
+        const templateList = await response.json();
+        
+        const loadedTemplates = await Promise.all(
+          templateList.map(async (template: any) => {
+            try {
+              const contentResponse = await fetch(`/templates/${template.file}`);
+              const content = await contentResponse.text();
+              return {
+                id: template.id,
+                name: template.name,
+                content
+              };
+            } catch (error) {
+              console.error(`Failed to load template ${template.file}:`, error);
+              return null;
+            }
+          })
+        );
+        
+        setTemplates(loadedTemplates.filter(Boolean));
+      }
+    } catch (error) {
+      console.error('Failed to load templates:', error);
+    }
+  };
 
   const generateSpec = async () => {
     if (!specData.title.trim() || !specData.description.trim()) {
@@ -56,6 +92,18 @@ const SpecEditor: React.FC<SpecEditorProps> = ({ config, documents, specData, se
         ? `\n\nReference Documents:\n${documents.map(doc => `--- ${doc.name} ---\n${doc.content}`).join('\n\n')}`
         : '';
 
+      // Prepare context from selected templates
+      const selectedTemplateContents = specData.selectedTemplates 
+        ? templates
+            .filter(template => specData.selectedTemplates!.includes(template.id))
+            .map(template => `--- Template: ${template.name} ---\n${template.content}`)
+            .join('\n\n')
+        : '';
+
+      const templateContext = selectedTemplateContents 
+        ? `\n\nTemplate References:\n${selectedTemplateContents}`
+        : '';
+
       const userPrompt = `Please generate a comprehensive technical specification based on the following information:
 
 Title: ${specData.title}
@@ -65,6 +113,7 @@ ${specData.description}
 
 ${specData.examples ? `Examples/Data Structures:\n${specData.examples}` : ''}
 ${documentContext}
+${templateContext}
 
 Please create a well-structured specification document that includes appropriate sections such as:
 - Introduction/Overview
