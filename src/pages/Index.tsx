@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Settings, FileText, Send, Download } from 'lucide-react';
 import ConfigModal from '../components/ConfigModal';
@@ -11,7 +10,7 @@ const Index = () => {
   const [showDocuments, setShowDocuments] = useState(false);
   const [config, setConfig] = useLocalStorage('spec-config', {
     apiToken: '',
-    model: 'Meta-Llama-3-1-8B-Instruct-FP8',
+    model: '',
     systemPrompt: 'You are a technical specification writer. Help create clear, comprehensive, and well-structured specifications based on the provided information. Follow standard RFC format and include all necessary sections like Introduction, Specification, Implementation, Security Considerations, and References.'
   });
   const [documents, setDocuments] = useLocalStorage('spec-documents', []);

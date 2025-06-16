@@ -1,6 +1,7 @@
 
-import React, { useState } from 'react';
-import { X } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { X, RefreshCw } from 'lucide-react';
+import { fetchAvailableModels, AkashModel } from '../services/akashApi';
 
 interface ConfigModalProps {
   config: {
@@ -12,14 +13,50 @@ interface ConfigModalProps {
   onClose: () => void;
 }
 
-const AVAILABLE_MODELS = [
-  'Meta-Llama-3-1-8B-Instruct-FP8',
-  'Meta-Llama-3-1-70B-Instruct-FP8',
-  'Meta-Llama-3-1-405B-Instruct-FP8',
-];
-
 const ConfigModal: React.FC<ConfigModalProps> = ({ config, setConfig, onClose }) => {
   const [formData, setFormData] = useState(config);
+  const [availableModels, setAvailableModels] = useState<AkashModel[]>([]);
+  const [loadingModels, setLoadingModels] = useState(false);
+  const [modelsError, setModelsError] = useState('');
+
+  const loadModels = async () => {
+    if (!formData.apiToken.trim()) {
+      setModelsError('API token is required to load models');
+      return;
+    }
+
+    setLoadingModels(true);
+    setModelsError('');
+    
+    try {
+      const models = await fetchAvailableModels(formData.apiToken);
+      setAvailableModels(models);
+      
+      // If current model is not in the list and we have models, select the first one
+      if (models.length > 0 && !models.find(m => m.id === formData.model)) {
+        setFormData({ ...formData, model: models[0].id });
+      }
+    } catch (error: any) {
+      console.error('Error loading models:', error);
+      setModelsError(error.response?.data?.error?.message || 'Failed to load models. Please check your API token.');
+    } finally {
+      setLoadingModels(false);
+    }
+  };
+
+  // Auto-load models when API token changes
+  useEffect(() => {
+    if (formData.apiToken && formData.apiToken !== config.apiToken) {
+      loadModels();
+    }
+  }, [formData.apiToken]);
+
+  // Load models on mount if we have an API token
+  useEffect(() => {
+    if (formData.apiToken) {
+      loadModels();
+    }
+  }, []);
 
   const handleSave = () => {
     setConfig(formData);
@@ -57,18 +94,53 @@ const ConfigModal: React.FC<ConfigModalProps> = ({ config, setConfig, onClose })
 
           {/* Model Selection */}
           <div>
-            <label className="block text-sm font-bold mb-2">
-              MODEL
-            </label>
+            <div className="flex justify-between items-center mb-2">
+              <label className="block text-sm font-bold">MODEL</label>
+              <button
+                onClick={loadModels}
+                disabled={loadingModels || !formData.apiToken}
+                className="border-2 border-black px-3 py-1 text-xs hover:bg-black hover:text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {loadingModels ? (
+                  <>
+                    <RefreshCw className="inline w-3 h-3 mr-1 animate-spin" />
+                    LOADING...
+                  </>
+                ) : (
+                  <>
+                    <RefreshCw className="inline w-3 h-3 mr-1" />
+                    REFRESH MODELS
+                  </>
+                )}
+              </button>
+            </div>
+            
+            {modelsError && (
+              <div className="border-2 border-red-600 bg-red-100 p-2 mb-2">
+                <p className="text-red-600 text-xs font-bold">{modelsError}</p>
+              </div>
+            )}
+            
             <select
               value={formData.model}
               onChange={(e) => setFormData({ ...formData, model: e.target.value })}
               className="w-full border-2 border-black p-3 font-mono bg-white"
+              disabled={availableModels.length === 0}
             >
-              {AVAILABLE_MODELS.map(model => (
-                <option key={model} value={model}>{model}</option>
-              ))}
+              {availableModels.length === 0 ? (
+                <option value="">No models available - check API token</option>
+              ) : (
+                availableModels.map(model => (
+                  <option key={model.id} value={model.id}>{model.id}</option>
+                ))
+              )}
             </select>
+            <p className="text-xs mt-1">
+              {availableModels.length > 0 
+                ? `${availableModels.length} models loaded` 
+                : 'Enter API token and click "REFRESH MODELS" to load available models'
+              }
+            </p>
           </div>
 
           {/* System Prompt */}
