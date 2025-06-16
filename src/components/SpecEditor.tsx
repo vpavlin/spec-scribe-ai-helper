@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Send, Download, Copy, Brain } from 'lucide-react';
 import axios from 'axios';
@@ -142,7 +141,7 @@ Format the output as a clear, professional specification document.`;
   };
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6 h-full">
       {/* Input Section */}
       <div className="space-y-6">
         <div className="border-2 border-black p-4">
@@ -216,8 +215,8 @@ Format the output as a clear, professional specification document.`;
       </div>
 
       {/* Output Section */}
-      <div className="space-y-6">
-        <div className="border-2 border-black p-4">
+      <div className="space-y-6 flex flex-col">
+        <div className="border-2 border-black p-4 flex flex-col flex-1">
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-xl font-bold">GENERATED SPECIFICATION</h2>
             {specData.generatedSpec && (
@@ -263,15 +262,17 @@ Format the output as a clear, professional specification document.`;
           )}
           
           {specData.generatedSpec ? (
-            <div className="border-2 border-gray-400 p-4 bg-gray-50 max-h-[600px] overflow-y-auto">
+            <div className="border-2 border-gray-400 p-4 bg-gray-50 flex-1 overflow-y-auto">
               <pre className="whitespace-pre-wrap text-sm font-mono">
                 {specData.generatedSpec}
               </pre>
             </div>
           ) : (
-            <div className="border-2 border-gray-400 p-8 text-center text-gray-600">
-              <p>Generated specification will appear here</p>
-              <p className="text-sm mt-2">Fill in the input fields and click "GENERATE SPECIFICATION"</p>
+            <div className="border-2 border-gray-400 p-8 text-center text-gray-600 flex-1 flex items-center justify-center">
+              <div>
+                <p>Generated specification will appear here</p>
+                <p className="text-sm mt-2">Fill in the input fields and click "GENERATE SPECIFICATION"</p>
+              </div>
             </div>
           )}
         </div>
