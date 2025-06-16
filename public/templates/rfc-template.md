@@ -1,49 +1,91 @@
+---
+slug: XX
+title: TEMPLATE
+name: RFC Template
+status: raw/draft/stable/deprecated
+category: Standards Track/Informational/Best Current Practice
+tags: an optional list of tags, not standard
+editor: Daniel Kaiser <danielkaiser@status.im>
+contributors:
+---
 
-# RFC Template
+## (Info, remove this section)
+
+This section contains meta info about writing RFCs.
+This section (including its subsections) MUST be removed.
+
+[COSS](https://rfc.vac.dev/spec/1/) explains the Vac RFC process.
+
+## Tags
+
+The `tags` metadata SHOULD contain a list of tags if applicable.
+
+Currently identified tags comprise
+
+* `waku/core-protocol` for Waku protocol definitions (e.g. store, relay, light push),
+* `waku/application` for applications built on top of Waku protocol
+(e.g. eth-dm, toy-chat),
 
 ## Abstract
 
-A brief summary of the specification.
+## Background / Rationale / Motivation
 
-## 1. Introduction
+This section serves as an introduction providing background information and
+a motivation/rationale for why the specified protocol is useful.
 
-### 1.1 Purpose
-What this specification aims to achieve.
+## Theory / Semantics
 
-### 1.2 Scope
-What is and isn't covered by this specification.
+A standard track RFC in `stable` status MUST feature this section.
+A standard track RFC in `raw` or `draft` status SHOULD feature this section.
+This section SHOULD explain in detail how the proposed protocol works.
+It may touch on the wire format where necessary for the explanation.
+This section MAY also specify endpoint behaviour when receiving specific messages,
+e.g. the behaviour of certain caches etc.
 
-### 1.3 Terminology
-Key terms and definitions used throughout this document.
+## Wire Format Specification / Syntax
 
-## 2. Requirements
+A standard track RFC in `stable` status MUST feature this section.
+A standard track RFC in `raw` or `draft` status SHOULD feature this section.
+This section SHOULD not contain explanations of semantics and
+focus on concisely defining the wire format.
+Implementations MUST adhere to these exact formats to interoperate with other implementations.
+It is fine, if parts of the previous section that touch on the wire format are repeated.
+The purpose of this section is having a concise definition
+of what an implementation sends and accepts.
+Parts that are not specified here are considered implementation details.
+Implementors are free to decide on how to implement these details.
+An optional *implementation suggestions* section may provide suggestions
+on how to approach implementation details, and,
+if available, point to existing implementations for reference.
 
-### 2.1 Functional Requirements
-What the system must do.
+## Implementation Suggestions (optional)
 
-### 2.2 Non-Functional Requirements
-Performance, security, and other quality attributes.
+## (Further Optional Sections)
 
-## 3. Specification
+## Security/Privacy Considerations
 
-### 3.1 Overview
-High-level description of the solution.
+A standard track RFC in `stable` status MUST feature this section.
+A standard track RFC in `raw` or `draft` status SHOULD feature this section.
+Informational RFCs (in any state) may feature this section.
+If there are none, this section MUST explicitly state that fact.
+This section MAY contain additional relevant information,
+e.g. an explanation as to why there are no security consideration
+for the respective document.
 
-### 3.2 Detailed Design
-In-depth technical details.
+## Copyright
 
-## 4. Implementation
+Copyright and related rights waived via [CC0](https://creativecommons.org/publicdomain/zero/1.0/).
 
-### 4.1 Implementation Guidelines
-How to implement this specification.
+## References
 
-### 4.2 Examples
-Concrete examples and use cases.
+References MAY be subdivided into normative and informative.
 
-## 5. Security Considerations
+## normative
 
-Security implications and recommendations.
+A list of references that MUST be read to fully understand and/or
+implement this protocol.
+See [RFC3967 Section 1.1](https://datatracker.ietf.org/doc/html/rfc3967#section-1.1).
 
-## 6. References
+## informative
 
-Related documents and standards.
+A list of additional references.

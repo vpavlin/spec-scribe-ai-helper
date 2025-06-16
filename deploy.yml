@@ -1,0 +1,32 @@
+---
+version: "2.0"
+services:
+  prompt-play:
+    image: >-
+      quay.io/vpavlin0/decentralize-workshop@sha256:b0ae416893e4cb5ac681249f8372909e275a7c99cff69b35f04b5ed877427935
+    expose:
+      - port: 80
+        as: 80
+        to:
+          - global: true
+profiles:
+  compute:
+    prompt-play:
+      resources:
+        cpu:
+          units: 0.1
+        memory:
+          size: 512Mi
+        storage:
+          - size: 300mi
+  placement:
+    dcloud:
+      pricing:
+        prompt-play:
+          denom: uakt
+          amount: 10000
+deployment:
+  prompt-play:
+    dcloud:
+      profile: prompt-play
+      count: 1

@@ -7,15 +7,9 @@
     "file": "rfc-template.md"
   },
   {
-    "id": "api-spec",
-    "name": "API Specification",
-    "description": "REST API documentation template",
-    "file": "api-spec.md"
-  },
-  {
-    "id": "protocol-spec",
-    "name": "Protocol Specification", 
-    "description": "Network protocol documentation",
-    "file": "protocol-spec.md"
+    "id": "waku2",
+    "name": "Waku v2 Specification",
+    "description": "Specification of Waku v2 protocol",
+    "file": "waku2.md"
   }
 ]
