@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Download, Copy, Brain } from 'lucide-react';
+import { Download, Copy, Brain, Loader } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
 import AIThinkingProcess from './AIThinkingProcess';
 
@@ -14,6 +14,7 @@ interface SpecOutputDisplayProps {
   onToggleThinking: () => void;
   onCopy: () => void;
   onDownload: () => void;
+  isGenerating?: boolean;
 }
 
 const SpecOutputDisplay: React.FC<SpecOutputDisplayProps> = ({
@@ -22,14 +23,15 @@ const SpecOutputDisplay: React.FC<SpecOutputDisplayProps> = ({
   showThinking,
   onToggleThinking,
   onCopy,
-  onDownload
+  onDownload,
+  isGenerating = false
 }) => {
   return (
     <div className="flex flex-col h-full overflow-hidden">
       <div className="border-2 border-black p-4 flex flex-col h-full">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-xl font-bold">GENERATED SPECIFICATION</h2>
-          {specData.generatedSpec && (
+          {specData.generatedSpec && !isGenerating && (
             <div className="flex gap-2">
               {thinkingProcess && (
                 <button
@@ -65,7 +67,15 @@ const SpecOutputDisplay: React.FC<SpecOutputDisplayProps> = ({
           isVisible={showThinking}
         />
         
-        {specData.generatedSpec ? (
+        {isGenerating ? (
+          <div className="border-2 border-gray-400 p-8 text-center text-gray-600 flex-1 flex items-center justify-center">
+            <div className="flex flex-col items-center">
+              <Loader className="w-8 h-8 animate-spin mb-4" />
+              <p className="font-bold">GENERATING SPECIFICATION...</p>
+              <p className="text-sm mt-2">Please wait while the AI creates your specification</p>
+            </div>
+          </div>
+        ) : specData.generatedSpec ? (
           <div className="flex-1 overflow-hidden mt-2">
             <div className="border-2 border-gray-400 p-4 bg-gray-50 h-full overflow-y-auto">
               <pre className="whitespace-pre-wrap text-sm font-mono">

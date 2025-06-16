@@ -192,6 +192,7 @@ Format the output as a clear, professional specification document in Markdown fo
         onToggleThinking={() => setShowThinking(!showThinking)}
         onCopy={copyToClipboard}
         onDownload={downloadSpec}
+        isGenerating={isGenerating}
       />
     </div>
   );
