@@ -35,11 +35,11 @@ const SpecInputForm: React.FC<SpecInputFormProps> = ({
   };
 
   return (
-    <div className="flex flex-col h-full overflow-hidden">
-      <div className="border-2 border-black p-4 flex flex-col h-full">
-        <h2 className="text-xl font-bold mb-4">SPECIFICATION INPUT</h2>
+    <div className="flex flex-col h-full">
+      <div className="border-2 border-black p-4 flex flex-col h-full min-h-0">
+        <h2 className="text-xl font-bold mb-4 flex-shrink-0">SPECIFICATION INPUT</h2>
         
-        <div className="flex-1 overflow-y-auto space-y-4">
+        <div className="flex-1 overflow-y-auto space-y-4 min-h-0 pr-2">
           <div>
             <label className="block text-sm font-bold mb-2">TITLE</label>
             <input
@@ -97,7 +97,7 @@ const SpecInputForm: React.FC<SpecInputFormProps> = ({
         <button
           onClick={onGenerate}
           disabled={isGenerating}
-          className="w-full border-2 border-black py-3 hover:bg-black hover:text-white transition-colors font-bold disabled:opacity-50 disabled:cursor-not-allowed mt-4"
+          className="w-full border-2 border-black py-3 hover:bg-black hover:text-white transition-colors font-bold disabled:opacity-50 disabled:cursor-not-allowed mt-4 flex-shrink-0"
         >
           {isGenerating ? (
             'GENERATING...'
