@@ -1,5 +1,4 @@
 
-
 import React, { useState, useEffect } from 'react';
 import { Settings, FileText, Send, Download } from 'lucide-react';
 import ConfigModal from '../components/ConfigModal';
@@ -27,10 +26,10 @@ const Index = () => {
   const isConfigured = config.apiToken && config.model;
 
   return (
-    <div className="min-h-screen bg-white text-black font-mono flex flex-col">
+    <div className="h-screen bg-white text-black font-mono flex flex-col overflow-hidden">
       {/* Header */}
       <header className="border-b-2 border-black p-4 flex-shrink-0">
-        <div className="flex justify-between items-center max-w-screen-2xl mx-auto">
+        <div className="flex justify-between items-center w-full">
           <h1 className="text-2xl font-bold">RFC/SPEC GENERATOR</h1>
           <div className="flex gap-4">
             <button
@@ -52,17 +51,19 @@ const Index = () => {
       </header>
 
       {/* Main Content */}
-      <main className="max-w-screen-2xl mx-auto p-4 flex-1 w-full">
+      <main className="flex-1 p-4 w-full overflow-hidden">
         {!isConfigured ? (
-          <div className="border-2 border-black p-8 mt-8 text-center">
-            <h2 className="text-xl font-bold mb-4">CONFIGURATION REQUIRED</h2>
-            <p className="mb-4">Please configure your Akash Chat API settings to get started.</p>
-            <button
-              onClick={() => setShowConfig(true)}
-              className="border-2 border-black px-6 py-3 hover:bg-black hover:text-white transition-colors"
-            >
-              OPEN CONFIG
-            </button>
+          <div className="border-2 border-black p-8 text-center h-full flex items-center justify-center">
+            <div>
+              <h2 className="text-xl font-bold mb-4">CONFIGURATION REQUIRED</h2>
+              <p className="mb-4">Please configure your Akash Chat API settings to get started.</p>
+              <button
+                onClick={() => setShowConfig(true)}
+                className="border-2 border-black px-6 py-3 hover:bg-black hover:text-white transition-colors"
+              >
+                OPEN CONFIG
+              </button>
+            </div>
           </div>
         ) : (
           <SpecEditor 
@@ -95,4 +96,3 @@ const Index = () => {
 };
 
 export default Index;
-

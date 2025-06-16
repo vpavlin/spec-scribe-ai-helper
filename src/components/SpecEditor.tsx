@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Send, Download, Copy, Brain } from 'lucide-react';
 import axios from 'axios';
@@ -141,13 +142,13 @@ Format the output as a clear, professional specification document.`;
   };
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6 h-full">
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 h-full overflow-hidden">
       {/* Input Section */}
-      <div className="space-y-6">
-        <div className="border-2 border-black p-4">
+      <div className="flex flex-col h-full overflow-hidden">
+        <div className="border-2 border-black p-4 flex flex-col h-full">
           <h2 className="text-xl font-bold mb-4">SPECIFICATION INPUT</h2>
           
-          <div className="space-y-4">
+          <div className="flex-1 overflow-y-auto space-y-4">
             <div>
               <label className="block text-sm font-bold mb-2">TITLE</label>
               <input
@@ -165,7 +166,7 @@ Format the output as a clear, professional specification document.`;
                 value={specData.description}
                 onChange={(e) => setSpecData({ ...specData, description: e.target.value })}
                 placeholder="Describe what this specification covers, its purpose, and key requirements..."
-                rows={8}
+                rows={6}
                 className="w-full border-2 border-black p-3 font-mono resize-none"
               />
             </div>
@@ -176,7 +177,7 @@ Format the output as a clear, professional specification document.`;
                 value={specData.examples}
                 onChange={(e) => setSpecData({ ...specData, examples: e.target.value })}
                 placeholder="Provide example data structures, API calls, or implementation examples..."
-                rows={6}
+                rows={4}
                 className="w-full border-2 border-black p-3 font-mono resize-none"
               />
             </div>
@@ -195,28 +196,28 @@ Format the output as a clear, professional specification document.`;
                 <p className="text-red-600 font-bold">ERROR: {error}</p>
               </div>
             )}
-
-            <button
-              onClick={generateSpec}
-              disabled={isGenerating}
-              className="w-full border-2 border-black py-3 hover:bg-black hover:text-white transition-colors font-bold disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {isGenerating ? (
-                'GENERATING...'
-              ) : (
-                <>
-                  <Send className="inline w-4 h-4 mr-2" />
-                  GENERATE SPECIFICATION
-                </>
-              )}
-            </button>
           </div>
+
+          <button
+            onClick={generateSpec}
+            disabled={isGenerating}
+            className="w-full border-2 border-black py-3 hover:bg-black hover:text-white transition-colors font-bold disabled:opacity-50 disabled:cursor-not-allowed mt-4"
+          >
+            {isGenerating ? (
+              'GENERATING...'
+            ) : (
+              <>
+                <Send className="inline w-4 h-4 mr-2" />
+                GENERATE SPECIFICATION
+              </>
+            )}
+          </button>
         </div>
       </div>
 
       {/* Output Section */}
-      <div className="space-y-6 flex flex-col">
-        <div className="border-2 border-black p-4 flex flex-col flex-1">
+      <div className="flex flex-col h-full overflow-hidden">
+        <div className="border-2 border-black p-4 flex flex-col h-full">
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-xl font-bold">GENERATED SPECIFICATION</h2>
             {specData.generatedSpec && (
@@ -252,7 +253,7 @@ Format the output as a clear, professional specification document.`;
 
           {showThinking && thinkingProcess && (
             <div className="mb-4">
-              <div className="border-2 border-gray-400 p-4 bg-gray-50 max-h-[300px] overflow-y-auto">
+              <div className="border-2 border-gray-400 p-4 bg-gray-50 max-h-[200px] overflow-y-auto">
                 <h3 className="text-sm font-bold mb-2">AI THINKING PROCESS:</h3>
                 <pre className="whitespace-pre-wrap text-xs font-mono text-gray-700">
                   {thinkingProcess}
