@@ -175,7 +175,7 @@ Format the output as a clear, professional specification document in Markdown fo
   };
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 h-screen overflow-scroll">
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 h-full overflow-scroll">
       <SpecInputForm
         specData={specData}
         setSpecData={setSpecData}
