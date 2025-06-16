@@ -1,6 +1,8 @@
-
 import React, { useState } from 'react';
 import { Send, Download, Copy, Brain } from 'lucide-react';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 import axios from 'axios';
 
 interface SpecEditorProps {
@@ -89,7 +91,7 @@ Please create a well-structured specification document that includes appropriate
 - Security Considerations (if applicable)
 - References (if applicable)
 
-Format the output as a clear, professional specification document.`;
+Format the output as a clear, professional specification document in Markdown format.`;
 
       const response = await client.post('/chat/completions', {
         model: config.model,
@@ -142,7 +144,7 @@ Format the output as a clear, professional specification document.`;
   };
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 h-full overflow-hidden">
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 h-screen overflow-hidden">
       {/* Input Section */}
       <div className="flex flex-col h-full overflow-hidden">
         <div className="border-2 border-black p-4 flex flex-col h-full">
@@ -263,11 +265,48 @@ Format the output as a clear, professional specification document.`;
           )}
           
           {specData.generatedSpec ? (
-            <div className="border-2 border-gray-400 p-4 bg-gray-50 flex-1 overflow-y-auto">
-              <pre className="whitespace-pre-wrap text-sm font-mono">
-                {specData.generatedSpec}
-              </pre>
-            </div>
+            <Tabs defaultValue="rendered" className="flex-1 flex flex-col overflow-hidden">
+              <TabsList className="border-2 border-black bg-white">
+                <TabsTrigger value="rendered" className="data-[state=active]:bg-black data-[state=active]:text-white">
+                  RENDERED
+                </TabsTrigger>
+                <TabsTrigger value="raw" className="data-[state=active]:bg-black data-[state=active]:text-white">
+                  RAW MARKDOWN
+                </TabsTrigger>
+              </TabsList>
+              
+              <TabsContent value="rendered" className="flex-1 overflow-hidden mt-2">
+                <div className="border-2 border-gray-400 p-4 bg-gray-50 h-full overflow-y-auto">
+                  <ReactMarkdown 
+                    remarkPlugins={[remarkGfm]}
+                    className="prose prose-sm max-w-none font-mono text-sm"
+                    components={{
+                      h1: ({node, ...props}) => <h1 className="text-lg font-bold mb-3 border-b pb-2" {...props} />,
+                      h2: ({node, ...props}) => <h2 className="text-base font-bold mb-2 mt-4" {...props} />,
+                      h3: ({node, ...props}) => <h3 className="text-sm font-bold mb-2 mt-3" {...props} />,
+                      code: ({node, inline, ...props}) => 
+                        inline ? 
+                          <code className="bg-gray-200 px-1 py-0.5 rounded text-xs font-mono" {...props} /> :
+                          <code className="block bg-gray-200 p-2 rounded text-xs font-mono overflow-x-auto" {...props} />,
+                      pre: ({node, ...props}) => <pre className="bg-gray-200 p-2 rounded overflow-x-auto" {...props} />,
+                      table: ({node, ...props}) => <table className="border-collapse border border-gray-300 w-full text-xs" {...props} />,
+                      th: ({node, ...props}) => <th className="border border-gray-300 px-2 py-1 bg-gray-100 font-bold" {...props} />,
+                      td: ({node, ...props}) => <td className="border border-gray-300 px-2 py-1" {...props} />,
+                    }}
+                  >
+                    {specData.generatedSpec}
+                  </ReactMarkdown>
+                </div>
+              </TabsContent>
+              
+              <TabsContent value="raw" className="flex-1 overflow-hidden mt-2">
+                <div className="border-2 border-gray-400 p-4 bg-gray-50 h-full overflow-y-auto">
+                  <pre className="whitespace-pre-wrap text-sm font-mono">
+                    {specData.generatedSpec}
+                  </pre>
+                </div>
+              </TabsContent>
+            </Tabs>
           ) : (
             <div className="border-2 border-gray-400 p-8 text-center text-gray-600 flex-1 flex items-center justify-center">
               <div>
