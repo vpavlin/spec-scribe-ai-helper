@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Send, Download, Copy } from 'lucide-react';
+import { Send, Download, Copy, Brain } from 'lucide-react';
 import axios from 'axios';
 
 interface SpecEditorProps {
@@ -27,6 +27,26 @@ interface SpecEditorProps {
 const SpecEditor: React.FC<SpecEditorProps> = ({ config, documents, specData, setSpecData }) => {
   const [isGenerating, setIsGenerating] = useState(false);
   const [error, setError] = useState('');
+  const [thinkingProcess, setThinkingProcess] = useState('');
+  const [showThinking, setShowThinking] = useState(false);
+
+  const parseAIResponse = (response: string) => {
+    // Extract thinking process from <think></think> blocks
+    const thinkRegex = /<think>([\s\S]*?)<\/think>/gi;
+    const thinkMatches = response.match(thinkRegex);
+    
+    let thinking = '';
+    if (thinkMatches) {
+      thinking = thinkMatches
+        .map(match => match.replace(/<\/?think>/gi, '').trim())
+        .join('\n\n---\n\n');
+    }
+    
+    // Remove thinking blocks from the main response
+    const cleanedResponse = response.replace(thinkRegex, '').trim();
+    
+    return { cleanedResponse, thinking };
+  };
 
   const generateSpec = async () => {
     if (!specData.title.trim() || !specData.description.trim()) {
@@ -36,6 +56,7 @@ const SpecEditor: React.FC<SpecEditorProps> = ({ config, documents, specData, se
 
     setIsGenerating(true);
     setError('');
+    setThinkingProcess('');
 
     try {
       const client = axios.create({
@@ -84,8 +105,16 @@ Format the output as a clear, professional specification document.`;
         ]
       });
 
-      const generatedSpec = response.data.choices[0].message.content;
-      setSpecData({ ...specData, generatedSpec });
+      const rawResponse = response.data.choices[0].message.content;
+      const { cleanedResponse, thinking } = parseAIResponse(rawResponse);
+      
+      setSpecData({ ...specData, generatedSpec: cleanedResponse });
+      setThinkingProcess(thinking);
+      
+      // Auto-show thinking if it exists
+      if (thinking) {
+        setShowThinking(true);
+      }
     } catch (err: any) {
       console.error('Error generating spec:', err);
       setError(err.response?.data?.error?.message || 'Failed to generate specification. Please check your API token and try again.');
@@ -193,6 +222,17 @@ Format the output as a clear, professional specification document.`;
             <h2 className="text-xl font-bold">GENERATED SPECIFICATION</h2>
             {specData.generatedSpec && (
               <div className="flex gap-2">
+                {thinkingProcess && (
+                  <button
+                    onClick={() => setShowThinking(!showThinking)}
+                    className={`border-2 border-black p-2 transition-colors ${
+                      showThinking ? 'bg-black text-white' : 'hover:bg-black hover:text-white'
+                    }`}
+                    title="Toggle AI thinking process"
+                  >
+                    <Brain className="w-4 h-4" />
+                  </button>
+                )}
                 <button
                   onClick={copyToClipboard}
                   className="border-2 border-black p-2 hover:bg-black hover:text-white transition-colors"
@@ -210,6 +250,17 @@ Format the output as a clear, professional specification document.`;
               </div>
             )}
           </div>
+
+          {showThinking && thinkingProcess && (
+            <div className="mb-4">
+              <div className="border-2 border-gray-400 p-4 bg-gray-50 max-h-[300px] overflow-y-auto">
+                <h3 className="text-sm font-bold mb-2">AI THINKING PROCESS:</h3>
+                <pre className="whitespace-pre-wrap text-xs font-mono text-gray-700">
+                  {thinkingProcess}
+                </pre>
+              </div>
+            </div>
+          )}
           
           {specData.generatedSpec ? (
             <div className="border-2 border-gray-400 p-4 bg-gray-50 max-h-[600px] overflow-y-auto">
