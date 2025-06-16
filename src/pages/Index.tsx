@@ -1,4 +1,5 @@
 
+
 import React, { useState, useEffect } from 'react';
 import { Settings, FileText, Send, Download } from 'lucide-react';
 import ConfigModal from '../components/ConfigModal';
@@ -26,9 +27,9 @@ const Index = () => {
   const isConfigured = config.apiToken && config.model;
 
   return (
-    <div className="min-h-screen bg-white text-black font-mono">
+    <div className="min-h-screen bg-white text-black font-mono flex flex-col">
       {/* Header */}
-      <header className="border-b-2 border-black p-4">
+      <header className="border-b-2 border-black p-4 flex-shrink-0">
         <div className="flex justify-between items-center max-w-screen-2xl mx-auto">
           <h1 className="text-2xl font-bold">RFC/SPEC GENERATOR</h1>
           <div className="flex gap-4">
@@ -51,7 +52,7 @@ const Index = () => {
       </header>
 
       {/* Main Content */}
-      <main className="max-w-screen-2xl mx-auto p-4">
+      <main className="max-w-screen-2xl mx-auto p-4 flex-1 w-full">
         {!isConfigured ? (
           <div className="border-2 border-black p-8 mt-8 text-center">
             <h2 className="text-xl font-bold mb-4">CONFIGURATION REQUIRED</h2>
@@ -94,3 +95,4 @@ const Index = () => {
 };
 
 export default Index;
+
